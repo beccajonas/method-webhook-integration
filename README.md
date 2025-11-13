@@ -45,7 +45,9 @@ This application allows you to:
 ### Creating a Webhook
 
 1. Enter your **Method API dev sandbox key** in the "API Key" field
-2. Enter your webhook endpoint URL in the "Webhook URL" field (e.g., `https://yourapp.com/webhook-handler`)
+2. Enter your webhook endpoint URL in the "Webhook URL" field
+   - **For testing**: Use [Webhook.site](https://webhook.site/) to get a unique URL (see below)
+   - **For production**: Use your own webhook endpoint URL
 3. Click "Create Webhook" to register the webhook with Method
 4. You'll see a confirmation message with the webhook ID if successful
 
@@ -57,46 +59,34 @@ This application allows you to:
 2. Click "Create Entity" to create the entity in Method's dev sandbox
 3. Upon successful creation, you'll see the entity ID
 
+### Using Webhook.site for Testing
+
+[Webhook.site](https://webhook.site/) is a free tool that provides unique URLs for receiving and inspecting webhook payloads. It's perfect for testing webhooks without setting up your own server.
+
+**To use Webhook.site:**
+
+1. Go to [https://webhook.site/](https://webhook.site/)
+2. You'll be given a unique URL (e.g., `https://webhook.site/unique-token-id`)
+3. Copy this URL and paste it into the "Webhook URL" field in this application
+4. After creating a webhook and then creating an entity, navigate back to your Webhook.site page
+5. You'll see the webhook request appear in real-time with:
+   - Request headers
+   - Request body/payload
+   - Query parameters
+   - Timestamp and other metadata
+
+**Note:** Webhook.site URLs are unique and private. Keep the URL secure and don't share it publicly.
+
 ### Viewing Webhook Data
 
 After creating an entity, the webhook will be triggered and Method will send a POST request to your configured webhook URL.
 
 **To see the webhook data:**
 1. Navigate to the webhook site/URL you configured when creating the webhook
+   - If using Webhook.site, go back to your Webhook.site page
+   - If using your own endpoint, check your server logs or webhook handler
 2. After the entity is created, check your webhook endpoint to see the webhook data
 3. The webhook payload will contain information about the created entity
-
-## API Endpoints
-
-### POST `/create-entity`
-Creates an individual entity in the Method API dev sandbox.
-
-**Request Body:**
-```json
-{
-  "apiKey": "your-api-key",
-  "first_name": "John",
-  "last_name": "Doe",
-  "phone": "+16505555555",
-  "email": "john@example.com",
-  "dob": "1990-01-01",
-  "line1": "123 Main St",
-  "city": "Austin",
-  "state": "TX",
-  "zip": "78701"
-}
-```
-
-### POST `/createWebhook`
-Creates a webhook subscription in the Method API dev sandbox.
-
-**Request Body:**
-```json
-{
-  "apiKey": "your-api-key",
-  "webhookSite": "https://yourapp.com/webhook-handler"
-}
-```
 
 ## Technologies Used
 
