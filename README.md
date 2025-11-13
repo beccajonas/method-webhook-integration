@@ -84,14 +84,4 @@ After creating an entity, the webhook will be triggered and Method will send a P
 2. After the entity is created, check your webhook endpoint to see the webhook data
 3. The webhook payload will contain information about the created entity
 
-## Technologies Used
-
-- Node.js
-- Express.js
-- Axios
-- HTML/CSS/JavaScript
-
-## License
-
-ISC
 
