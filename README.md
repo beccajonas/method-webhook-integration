@@ -16,9 +16,6 @@ This application allows you to:
 - A Method API key for the **dev sandbox** (required)
 - A webhook endpoint URL to receive webhook notifications
 
-## Important: API Key Requirement
-
-**⚠️ This application requires a Method API key for the dev sandbox environment.** Make sure you're using a dev sandbox API key, not a production key.
 
 ## Installation
 
@@ -47,7 +44,6 @@ This application allows you to:
 1. Enter your **Method API dev sandbox key** in the "API Key" field
 2. Enter your webhook endpoint URL in the "Webhook URL" field
    - **For testing**: Use [Webhook.site](https://webhook.site/) to get a unique URL (see below)
-   - **For production**: Use your own webhook endpoint URL
 3. Click "Create Webhook" to register the webhook with Method
 4. You'll see a confirmation message with the webhook ID if successful
 
