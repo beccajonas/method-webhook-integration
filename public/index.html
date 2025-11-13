@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Method Entity + Webhook Demo</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    input, button {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    button {
+      cursor: pointer;
+    }
+    pre {
+      background: #f7f7f7;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h2>Method Entity Creator (Dev API)</h2>
+  <p>Create an individual entity and view the webhook payload.</p>
+
+  <form id="entityForm">
+    <label>API Key</label>
+    <input type="password" id="apiKey" name="apiKey" placeholder="Enter your Method API key" required />
+
+    <label>Webhook URL</label>
+    <input type="url" id="webhookSite" name="webhookSite" placeholder="https://yourapp.com/webhook-handler" required />
+    
+    <button id="createWebhookBtn" type="button">Create Webhook</button>
+  <p id="webhookStatus"></p>
+
+    <h3>Individual Info</h3>
+    <input name="first_name" placeholder="First Name" required />
+    <input name="last_name" placeholder="Last Name" required />
+    <input name="phone" placeholder="+16505555555" required />
+    <input name="email" placeholder="email@example.com" required />
+    <input name="dob" type="date" required />
+
+    <h3>Address</h3>
+    <input name="line1" placeholder="Address Line 1" required />
+    <input name="city" placeholder="City" required />
+    <input name="state" maxlength="2" placeholder="State (e.g. TX)" required />
+    <input name="zip" maxlength="5" placeholder="ZIP" required />
+
+    <button type="submit">Create Entity</button>
+  </form>
+
+  <p id="entityStatus"></p>
+
+<script>
+const form = document.getElementById("entityForm");
+const entityStatus = document.getElementById("entityStatus");
+const webhookBtn = document.getElementById("createWebhookBtn");
+const webhookStatus = document.getElementById("webhookStatus");
+
+// Create Entity
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  entityStatus.textContent = "Creating entity...";
+
+  const formData = Object.fromEntries(new FormData(form).entries());
+
+  try {
+    const res = await fetch("/create-entity", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      const errorMsg = data.error ? JSON.stringify(data.error) : "Unknown error";
+      entityStatus.textContent = `Error: ${errorMsg}`;
+      console.error("Entity error response:", data);
+      return;
+    }
+
+    if (data.id || data.data?.id) {
+      entityStatus.textContent = `Entity Created! ID: ${data.id || data.data.id}`;
+    } else {
+      entityStatus.textContent = `Entity created! Check console for details.`;
+    }
+    console.log("Entity response:", data);
+  } catch (err) {
+    entityStatus.textContent = "Error creating entity.";
+    console.error(err);
+  }
+});
+
+// Create Webhook
+webhookBtn.addEventListener("click", async () => {
+  const webhookSite = document.getElementById("webhookSite").value;
+  const apiKey = document.getElementById("apiKey").value;
+
+  if (!webhookSite) {
+    webhookStatus.textContent = "Please enter a webhook URL.";
+    return;
+  }
+  if (!apiKey) {
+    webhookStatus.textContent = "Please enter your API key.";
+    return;
+  }
+
+  webhookStatus.textContent = "Creating webhook...";
+
+  try {
+    const res = await fetch("/createWebhook", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ webhookSite, apiKey }),
+    });
+    
+    const data = await res.json();
+
+    if (!res.ok) {
+      const errorMsg = data.error ? JSON.stringify(data.error) : "Unknown error";
+      webhookStatus.textContent = `Error: ${errorMsg}`;
+      console.error("Webhook error response:", data);
+      return;
+    }
+
+    if (data.id || data.data?.webhook_id || data.data?.id) {
+      webhookStatus.textContent = `Webhook created! ID: ${data.id || data.data?.webhook_id || data.data?.id}`;
+    } else {
+      webhookStatus.textContent = `Webhook created! Check console for details.`;
+    }
+    console.log("Webhook response:", data);
+  } catch (err) {
+    webhookStatus.textContent = `Error creating webhook: ${err.message}`;
+    console.error(err);
+  }
+});
+</script>
+</body>
+</html>
